@@ -1,47 +1,44 @@
 import pandas as pd
 import os
 import PyPDF2
-import csv
 import json
 
-
-
+OUTPUT_NAME = 'output.xlsx'
+PATH_SEPARATOR = os.sep
 
 
 def read_input():
-    path = os.getcwd() + '\Input'
+    path = f'{os.getcwd()}{PATH_SEPARATOR}Input'
     files = os.listdir(path)
     cols = read_json()
 
     all_df = pd.DataFrame(columns=cols)
 
     for file in files:
-        file_path = f'{path}\{file}'
+        file_path = f'{path}{PATH_SEPARATOR}{file}'
         df = pd.read_excel(file_path).iloc[1:]
         all_df = all_df.append(df)
+    all_df.dropna(how='all', axis=1, inplace=True)
+    if os.path.exists(OUTPUT_NAME):
+        os.remove(OUTPUT_NAME)
+    all_df.to_excel(OUTPUT_NAME, index=False)
 
-    all_df.to_csv('output.csv')
-    print(all_df)
 
 def read_json():
-    json_path = os.getcwd() + '\Template\inputHeaders.json'
+    json_path = f'{os.getcwd()}{PATH_SEPARATOR}Settings{PATH_SEPARATOR}inputHeaders.json'
 
     with open(json_path) as json_file:
         data = json.load(json_file)
-        # print(data['headers'])
         return data['headers']
 
 
-read_input()
-
-
-def list_PDF_fields():
-    path = os.getcwd() + '\Template'
+def list_pdf_fields():
+    path = f'{os.getcwd()}{PATH_SEPARATOR}Template'
 
     files = os.listdir(path)
 
     for file in files:
-        file_path = f'{path}\{file}'
+        file_path = f'{path}{PATH_SEPARATOR}{file}'
         f = PyPDF2.PdfFileReader(file_path)
         n_pages = f.getNumPages()
 
@@ -57,9 +54,4 @@ def list_PDF_fields():
             return
 
 
-def write_csv(fields):
-    fname = 'test.csv'
-    with open(fname,'wb') as f:
-        w = csv.writer(f)
-        w.writerow(fields.keys())
-        w.writerow(dict.values())
+read_input()

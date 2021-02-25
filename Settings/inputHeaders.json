@@ -1,0 +1,115 @@
+{
+    "headers": [
+        {
+            "pdfHeader": {
+                "name": "4.1",
+                "xlHeaders": [
+                    "Salutation"
+                ],
+                "action": "grabValue"
+            }
+        },
+        {
+            "pdfHeader": {
+                "name": "4.2",
+                "xlHeaders": [
+                    "First Name"
+                ],
+                "action": "grabValue"
+            }
+        },
+        {
+            "pdfHeader": {
+                "name": "4.3",
+                "xlHeaders": [
+                    "Last Name", 
+                    "Middle Name"
+                ],
+                "action": "combineWithDelimiter(space)"
+            }
+        },
+        {
+            "pdfHeader": {
+                "name": "4.4",
+                "xlHeaders": [
+                    "Permament Address"
+                ],
+                "action": "grabValue"
+            }
+        },
+        {
+            "pdfHeader": {
+                "name": "4.5",
+                "xlHeaders": [
+                    "National Insurance Number"
+                ],
+                "action": "grabValue"
+            }
+        },
+        {
+            "xlHeader": "Personnel Number",
+            "pdfHeader": {
+                "name": "4.6",
+                "xlHeaders": [
+                    "Personnel Number"
+                ],
+                "action": "grabValue"
+            }
+        },
+        {
+            "pdfHeader": {
+                "name": "4.7",
+                "xlHeaders": [
+                    "PAYE Reference Number"
+                ],
+                "action": "extractTextByDelimiter(before, /)"
+            }
+        },
+        {
+            "pdfHeader": {
+                "name": "4.8",
+                "xlHeaders": [
+                    "PAYE Reference Number"
+                ],
+                "action": "extractTextByDelimiter(after, /)"
+            }
+        },
+        {
+            "pdfHeader": {
+                "name": "4.10",
+                "xlHeaders": [
+                    "Start Date"
+                ],
+                "action": "convertToDate"
+            }
+        },
+        {
+            "pdfHeader": {
+                "name": "4.11",
+                "xlHeaders": [
+                    "End Date"
+                ],
+                "action": "convertToDate"
+            }
+        },
+
+    ]
+    //     "Personnel Area Code",
+    //     "Personnel Area Text",
+    //     "Personnel Number",
+    //     "Last Name",
+    //     "Middle Name",
+    //     "National Insurance Number",
+    //     "Permanent Address",
+    //     "Postal Code",
+    //     "PAYE Reference Number",
+    //     "Start Date",
+    //     "End Date",
+    //     "Exclusion reason",
+    //     "Exclusion Date",
+    //     "The week baby is due",
+    //     "Qualifying Week",
+    //     "Maternity Pay Period",
+    //     "Date of Task",
+    //     "Comment"
+}
