@@ -2,6 +2,71 @@
     "headers": [
         {
             "pdfHeader": {
+                "name": "3.1",
+                "xlHeaders": [
+                    "Personnel Area Text"
+                ],
+                "action": "grabValue"
+            }
+        },
+        {
+            "pdfHeader": {
+                "name": "3.2",
+                "xlHeaders": [],
+                "action": "grabValue"
+            }
+        },
+        {
+            "pdfHeader": {
+                "name": "3.3",
+                "xlHeaders": [],
+                "action": "getTodaysDate"
+            }
+        },
+        {
+            "pdfHeader": {
+                "name": "3.4",
+                "xlHeaders": [],
+                "action": "defaultValue(IKEA Employee)"
+            }  
+        },
+        {
+            "pdfHeader": {
+                "name": "3.5",
+                "xlHeaders": [],
+                "action": "defaultValue(12345)"
+            }  
+        },
+        {
+            "pdfHeader": {
+                "name": "3.6",
+                "xlHeaders": [],
+                "action": "defaultValue(abc123)"
+            }  
+        },
+        {
+            "pdfHeader": {
+                "name": "3.7",
+                "xlHeaders": [],
+                "action": "defaultValue(ikea@uk.ikea.com)"
+            }  
+        },
+        {
+            "pdfHeader": {
+                "name": "3.8",
+                "xlHeaders": [],
+                "action": "defaultValue(1 John Smith's Street, London, UK)"
+            }  
+        },
+        {
+            "pdfHeader": {
+                "name": "3.9",
+                "xlHeaders": [],
+                "action": "defaultValue(IKEA Org)"
+            }  
+        },
+        {
+            "pdfHeader": {
                 "name": "4.1",
                 "xlHeaders": [
                     "Salutation"
@@ -92,24 +157,14 @@
                 "action": "convertToDate"
             }
         },
-
+        {
+            "pdfHeader": {
+                "name": "5.1",
+                "xlHeaders": [
+                    "Exclusion Date"
+                ],
+                "action": "convertToDate"
+            }
+        }
     ]
-    //     "Personnel Area Code",
-    //     "Personnel Area Text",
-    //     "Personnel Number",
-    //     "Last Name",
-    //     "Middle Name",
-    //     "National Insurance Number",
-    //     "Permanent Address",
-    //     "Postal Code",
-    //     "PAYE Reference Number",
-    //     "Start Date",
-    //     "End Date",
-    //     "Exclusion reason",
-    //     "Exclusion Date",
-    //     "The week baby is due",
-    //     "Qualifying Week",
-    //     "Maternity Pay Period",
-    //     "Date of Task",
-    //     "Comment"
 }
