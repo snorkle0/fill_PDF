@@ -13,7 +13,7 @@
             "pdfHeader": {
                 "name": "3.2",
                 "xlHeaders": [],
-                "action": "grabValue"
+                "action": "defaultValue(IKEA Signature)"
             }
         },
         {
@@ -97,7 +97,7 @@
             "pdfHeader": {
                 "name": "4.4",
                 "xlHeaders": [
-                    "Permament Address"
+                    "Permanent Address"
                 ],
                 "action": "grabValue"
             }
