@@ -20,10 +20,7 @@ def read_input():
         file_path = f'{path}{PATH_SEPARATOR}{file}'
         df = pd.read_excel(file_path, usecols=cols).iloc[1:]
         all_df = all_df.append(df)
-    # if os.path.exists(OUTPUT_NAME):
-    #     os.remove(OUTPUT_NAME)
-    # all_df.to_excel(OUTPUT_NAME, index=False)
-    all_df.index = np.arange(1, len(all_df)+1)
+    # all_df.index = np.arange(1, len(all_df)+1)
     return all_df
 
 
@@ -89,5 +86,6 @@ def transform_data():
     return data_to_pdf
 
 
+# read_input()
 transform_data()
 

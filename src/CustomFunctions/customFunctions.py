@@ -2,8 +2,6 @@ from datetime import datetime
 from src.utils import isNaN
 
 
-
-
 def trigger_rule(row, rules, output):
 
     rule_action = rules['pdfHeader']['action']
