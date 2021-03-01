@@ -6,7 +6,7 @@
                 "xlHeaders": [
                     "Personnel Area Text"
                 ],
-                "action": "grabValue"
+                "action": "grabValue()"
             }
         },
         {
@@ -20,7 +20,7 @@
             "pdfHeader": {
                 "name": "3.3",
                 "xlHeaders": [],
-                "action": "getTodaysDate"
+                "action": "getTodaysDate()"
             }
         },
         {
@@ -71,7 +71,7 @@
                 "xlHeaders": [
                     "Salutation"
                 ],
-                "action": "grabValue"
+                "action": "grabValue()"
             }
         },
         {
@@ -80,7 +80,7 @@
                 "xlHeaders": [
                     "First Name"
                 ],
-                "action": "grabValue"
+                "action": "grabValue()"
             }
         },
         {
@@ -90,7 +90,7 @@
                     "Last Name", 
                     "Middle Name"
                 ],
-                "action": "combineWithDelimiter(space)"
+                "action": "combineWithDelimiter( )"
             }
         },
         {
@@ -99,7 +99,7 @@
                 "xlHeaders": [
                     "Permanent Address"
                 ],
-                "action": "grabValue"
+                "action": "grabValue()"
             }
         },
         {
@@ -108,7 +108,7 @@
                 "xlHeaders": [
                     "National Insurance Number"
                 ],
-                "action": "grabValue"
+                "action": "grabValue()"
             }
         },
         {
@@ -118,7 +118,7 @@
                 "xlHeaders": [
                     "Personnel Number"
                 ],
-                "action": "grabValue"
+                "action": "grabValue()"
             }
         },
         {
@@ -145,7 +145,7 @@
                 "xlHeaders": [
                     "Start Date"
                 ],
-                "action": "convertToDate"
+                "action": "convertToDate()"
             }
         },
         {
@@ -154,7 +154,7 @@
                 "xlHeaders": [
                     "End Date"
                 ],
-                "action": "convertToDate"
+                "action": "convertToDate()"
             }
         },
         {
@@ -163,7 +163,7 @@
                 "xlHeaders": [
                     "Exclusion Date"
                 ],
-                "action": "convertToDate"
+                "action": "convertToDate()"
             }
         }
     ]

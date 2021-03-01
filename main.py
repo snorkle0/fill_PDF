@@ -4,6 +4,7 @@ import os
 import PyPDF2
 import json
 from src.CustomFunctions.customFunctions import trigger_rule
+from src.utils import is_in_array
 
 OUTPUT_NAME = 'output.xlsx'
 PATH_SEPARATOR = os.sep
@@ -82,18 +83,10 @@ def transform_data():
 
     for index, row in data.iterrows():
         for i in range(len(rules)):
-            rule_name = rules[i]['pdfHeader']['name']
-            rule_action = rules[i]['pdfHeader']['action']
-            rule_index = data_to_pdf.columns.get_loc(rule_name)
-            # print(index)
-            trigger_rule(data.iloc[index], rule_index, rule_action, data_to_pdf)
+            trigger_rule(data.iloc[index], rules[i], data_to_pdf)
 
-
-def is_in_array(val, arr):
-    s = set(arr)
-    if val in s:
-        return True
-    return False
+    print(data_to_pdf)
+    return data_to_pdf
 
 
 transform_data()
