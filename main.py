@@ -2,12 +2,25 @@ import pandas as pd
 import numpy as np
 import os
 import PyPDF2
+import pdfrw
 import json
 from src.CustomFunctions.customFunctions import trigger_rule
 from src.utils import is_in_array
 
-OUTPUT_NAME = 'output.xlsx'
+
+#PDF constants
+ANNOT_KEY = '/Annots'
+ANNOT_FIELD_KEY = '/T'
+ANNOT_VAL_KEY = '/V'
+ANNOT_RECT_KEY = '/Rect'
+SUBTYPE_KEY = '/Subtype'
+WIDGET_SUBTYPE_KEY = '/Widget'
+
+#Other constants
+EXCEL_OUTPUT_NAME = 'output.xlsx'
 PATH_SEPARATOR = os.sep
+OUTPUT_FOLDER = 'Output'
+PDF_TEMPLATE_PATH = f'Template{PATH_SEPARATOR}ssp1-interactive.pdf'
 
 
 def read_input():
@@ -52,26 +65,16 @@ def get_cols(colType):
 
 
 def list_pdf_fields():
-    path = f'{os.getcwd()}{PATH_SEPARATOR}Template'
 
-    files = os.listdir(path)
+    template = pdfrw.PdfFileReader(PDF_TEMPLATE_PATH)
 
-    for file in files:
-        file_path = f'{path}{PATH_SEPARATOR}{file}'
-        f = PyPDF2.PdfFileReader(file_path)
-        n_pages = f.getNumPages()
-
-        print(n_pages)
-        for i in range(n_pages):
-            curr_page = f.getPage(i)
-            try:
-                for annot in curr_page['/Annots']:
-                    print(f'Page {i}: {annot.getObject()}')
-                    print('')
-            except:
-                pass
-            return
-
+    for page in template.pages:
+        annotations = page[ANNOT_KEY]
+        for annotation in annotations:
+            if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
+                if annotation[ANNOT_FIELD_KEY]:
+                    key = annotation[ANNOT_FIELD_KEY][1:-1]
+                    print(key)
 
 def transform_data():
     data = read_input()
@@ -82,10 +85,30 @@ def transform_data():
         for i in range(len(rules)):
             trigger_rule(data.iloc[index], rules[i], data_to_pdf)
 
-    print(data_to_pdf)
-    return data_to_pdf
+    # print(f'Type from main: {type(data_to_pdf)}')
+    # print(data_to_pdf)
+    data_to_pdf.to_excel(EXCEL_OUTPUT_NAME)
+    return data_to_pdf.to_dict(orient='index')
+
+
+def fill_pdf():
+
+    data_dict = transform_data()
+    template = pdfrw.PdfFileReader(PDF_TEMPLATE_PATH)
+
+    for key in data_dict.keys():
+        # print(f'Row {key}: {data_dict[key]}')
+        data_row = data_dict[key]  #transform each row into dict
+        for page in template.pages:
+            annotations = page[ANNOT_KEY]
+            for annotation in annotations:
+                if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
+                    if annotation[ANNOT_FIELD_KEY]:
+                        pdf_key = annotation[ANNOT_FIELD_KEY][1:-1]
+                        if pdf_key in data_row.keys():
 
 
 # read_input()
-transform_data()
-
+# transform_data()
+# list_pdf_fields()
+fill_pdf()

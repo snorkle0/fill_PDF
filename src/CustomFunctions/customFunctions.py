@@ -25,9 +25,8 @@ def trigger_rule(row, rules, output):
     }
 
     rule_result = functionList[function_name](**parameters)
-
-    output.at[rule_index, row.name] = rule_result
-
+    output.at[row.name, rule_name] = rule_result
+    # print(f'Type from custom functions: {type(output)}')
     return output
 
 
