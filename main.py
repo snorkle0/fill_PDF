@@ -5,16 +5,19 @@ import PyPDF2
 import pdfrw
 import json
 from src.CustomFunctions.customFunctions import trigger_rule
-from src.utils import is_in_array
+from src.utils import is_in_array, slice_dict
 
 
 #PDF constants
-ANNOT_KEY = '/Annots'
-ANNOT_FIELD_KEY = '/T'
+ANNOT_KEY = '/Annots'           # key for all annotations within a page
+ANNOT_FIELD_KEY = '/T'          # Name of field. i.e. given ID of field
+ANNOT_FORM_type = '/FT'         # Form type (e.g. text/button)
 ANNOT_VAL_KEY = '/V'
 ANNOT_RECT_KEY = '/Rect'
 SUBTYPE_KEY = '/Subtype'
 WIDGET_SUBTYPE_KEY = '/Widget'
+ANNOT_FORM_button = '/Btn'      # ID for buttons, i.e. a checkbox
+ANNOT_FORM_text = '/Tx'         # ID for textbox
 
 #Other constants
 EXCEL_OUTPUT_NAME = 'output.xlsx'
@@ -76,6 +79,7 @@ def list_pdf_fields():
                     key = annotation[ANNOT_FIELD_KEY][1:-1]
                     print(key)
 
+
 def transform_data():
     data = read_input()
     data_to_pdf = pd.DataFrame(columns=get_cols('pdf'))
@@ -84,31 +88,44 @@ def transform_data():
     for index, row in data.iterrows():
         for i in range(len(rules)):
             trigger_rule(data.iloc[index], rules[i], data_to_pdf)
-
-    # print(f'Type from main: {type(data_to_pdf)}')
-    # print(data_to_pdf)
     data_to_pdf.to_excel(EXCEL_OUTPUT_NAME)
     return data_to_pdf.to_dict(orient='index')
+
+
+def transform_data_dict(data_dict):
+
+    new_dict = {k.split('.')[0]: k for k in data_dict.keys()}
+    # print(new_dict)
+
+    for k in new_dict.keys():
+        new_dict[k] = slice_dict(data_dict, k)
+    return new_dict
 
 
 def fill_pdf():
 
     data_dict = transform_data()
     template = pdfrw.PdfFileReader(PDF_TEMPLATE_PATH)
+    pages = template.pages
 
     for key in data_dict.keys():
-        # print(f'Row {key}: {data_dict[key]}')
-        data_row = data_dict[key]  #transform each row into dict
-        for page in template.pages:
-            annotations = page[ANNOT_KEY]
+        data_row = transform_data_dict(data_dict[key])
+        for page in range(len(pages)):
+            if data_row.get(str(page)) is None:
+                print(f'Skipping page {page}...')
+                continue
+            page_data = data_row[str(page)]
+            annotations = pages[page][ANNOT_KEY]
             for annotation in annotations:
                 if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
                     if annotation[ANNOT_FIELD_KEY]:
                         pdf_key = annotation[ANNOT_FIELD_KEY][1:-1]
-                        if pdf_key in data_row.keys():
+                        if pdf_key in page_data.keys():
+                            annotation.update( pdfrw.PdfDict(V=page_data[pdf_key], AS=page_data[pdf_key]))
+        template.Root.AcroForm.update(pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
+        output_pdf_path = f'{OUTPUT_FOLDER}{PATH_SEPARATOR}{key}.pdf'
+        pdfrw.PdfWriter().write(output_pdf_path, template)
 
 
-# read_input()
-# transform_data()
-# list_pdf_fields()
-fill_pdf()
+if __name__ == '__main__':
+    fill_pdf()
