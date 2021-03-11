@@ -88,14 +88,13 @@ def transform_data():
     for index, row in data.iterrows():
         for i in range(len(rules)):
             trigger_rule(data.iloc[index], rules[i], data_to_pdf)
-    data_to_pdf.to_excel(EXCEL_OUTPUT_NAME)
+    # data_to_pdf.to_excel(EXCEL_OUTPUT_NAME)
     return data_to_pdf.to_dict(orient='index')
 
 
 def transform_data_dict(data_dict):
 
     new_dict = {k.split('.')[0]: k for k in data_dict.keys()}
-    # print(new_dict)
 
     for k in new_dict.keys():
         new_dict[k] = slice_dict(data_dict, k)
@@ -115,6 +114,7 @@ def fill_pdf():
                 print(f'Skipping page {page}...')
                 continue
             page_data = data_row[str(page)]
+            page_data = {k.split('.')[1]: v for k, v in page_data.items()}
             annotations = pages[page][ANNOT_KEY]
             for annotation in annotations:
                 if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
