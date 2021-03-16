@@ -70,14 +70,17 @@ def get_cols(colType):
 def list_pdf_fields():
 
     template = pdfrw.PdfFileReader(PDF_TEMPLATE_PATH)
+    pages = template.pages
 
-    for page in template.pages:
-        annotations = page[ANNOT_KEY]
+    for page in range(1, len(pages)+1):
+        annotations = pages[page-1][ANNOT_KEY]
         for annotation in annotations:
             if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
                 if annotation[ANNOT_FIELD_KEY]:
                     key = annotation[ANNOT_FIELD_KEY][1:-1]
-                    print(key)
+                    print(f' Page {page}: {key}, '
+                          f'type {annotation[ANNOT_FORM_type]}, '
+                          f'current value: {annotation[ANNOT_VAL_KEY]}')
 
 
 def transform_data():
@@ -109,23 +112,45 @@ def fill_pdf():
 
     for key in data_dict.keys():
         data_row = transform_data_dict(data_dict[key])
-        for page in range(len(pages)):
+        for page in range(1, len(pages)+1):
             if data_row.get(str(page)) is None:
-                print(f'Skipping page {page}...')
+                print(f'Skipping page {page} in file {key}...')
                 continue
             page_data = data_row[str(page)]
             page_data = {k.split('.')[1]: v for k, v in page_data.items()}
-            annotations = pages[page][ANNOT_KEY]
+            annotations = pages[page-1][ANNOT_KEY]
             for annotation in annotations:
                 if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
                     if annotation[ANNOT_FIELD_KEY]:
                         pdf_key = annotation[ANNOT_FIELD_KEY][1:-1]
                         if pdf_key in page_data.keys():
-                            annotation.update( pdfrw.PdfDict(V=page_data[pdf_key], AS=page_data[pdf_key]))
+                            # if annotation[ANNOT_FORM_type] == ANNOT_FORM_button:
+                            #     print(f'Updating page {page}: {key},'
+                            #           f'field {pdf_key},'
+                            #           f' new value: {page_data[pdf_key]}')
+                            #     annotation.update(pdfrw.PdfDict(V=pdfrw.PdfDict(page_data[pdf_key]),
+                            #     AS=pdfrw.PdfName(page_data[pdf_key]) ))
+                            if annotation[ANNOT_FORM_type] == ANNOT_FORM_text:
+                                print(f'Updating file {key}:'
+                                      f' page {page}:'
+                                      f'field {pdf_key},'
+                                      f' new value: {page_data[pdf_key]}')
+                                annotation.update(pdfrw.PdfDict(V=page_data[pdf_key],
+                                                                AP=page_data[pdf_key]))
+
         template.Root.AcroForm.update(pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
         output_pdf_path = f'{OUTPUT_FOLDER}{PATH_SEPARATOR}{key}.pdf'
         pdfrw.PdfWriter().write(output_pdf_path, template)
 
 
+def clear_output_folder():
+    output_files = os.listdir(OUTPUT_FOLDER)
+
+    for file in output_files:
+        os.remove(f'{OUTPUT_FOLDER}{PATH_SEPARATOR}{file}')
+
+
 if __name__ == '__main__':
-    fill_pdf()
+    # clear_output_folder()
+    # fill_pdf()
+    list_pdf_fields()
